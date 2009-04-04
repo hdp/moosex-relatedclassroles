@@ -83,4 +83,8 @@ A string naming the role applying method.  C<apply_driver_class_names> in the
 L</SYNOPSIS>.  Defaults to adding C<apply_> and C<_names> to the
 C<class_accessor_name>.
 
+=head1 BLAME
+
+  Florian Ragwitz (rafl)
+
 =cut
