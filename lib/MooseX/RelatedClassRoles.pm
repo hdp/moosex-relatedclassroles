@@ -1,40 +1,40 @@
-package MooseX::Role::ApplyRelatedClassRoles;
+package MooseX::Role::RelatedClassRoles;
 # ABSTRACT: Apply roles to a class related to yours
 use MooseX::Role::Parameterized;
 
-parameter related_name => (
+parameter name => (
   isa      => 'Str',
   required => 1,
 );
 
-parameter accessor_name => (
+parameter class_accessor_name => (
   isa      => 'Str',
   lazy     => 1,
-  default  => sub { $_[0]->related_name . '_class' },
+  default  => sub { $_[0]->name . '_class' },
 );
 
 parameter apply_method_name => (
   isa      => 'Str',
   lazy     => 1,
-  default  => sub { 'apply_' . $_[0]->accessor_name . '_roles' },
+  default  => sub { 'apply_' . $_[0]->class_accessor_name . '_roles' },
 );
 
 role {
   my $p = shift;
 
-  my $accessor_name     = $p->accessor_name;
-  my $apply_method_name = $p->apply_method_name;
+  my $class_accessor_name = $p->class_accessor_name;
+  my $apply_method_name   = $p->apply_method_name;
 
-  requires $accessor_name;
+  requires $class_accessor_name;
 
   method $apply_method_name => sub {
     my $self = shift;
     my $meta = Moose::Meta::Class->create_anon_class(
-      superclasses => [ $self->$accessor_name ],
+      superclasses => [ $self->$class_accessor_name ],
       roles        => [ @_ ],
       cache        => 1,
     );
-    $self->$accessor_name($meta->name);
+    $self->$class_accessor_name($meta->name);
   };
 };
 
@@ -52,7 +52,7 @@ __END__
     isa => 'MyApp::Driver',
   );
 
-  with 'MooseX::Role::ApplyRelatedClassRoles' => { related_name => 'driver' };
+  with 'MooseX::Role::RelatedClassRoles' => { name => 'driver' };
 
   # ...
 
@@ -60,5 +60,27 @@ __END__
   $obj->apply_driver_class_roles("Other::Driver::Role");
 
 =head1 DESCRIPTION
+
+Frequently, you have to use a class that provides some C<foo_class> accessor or
+attribute as a method of dependency injection.  Use this role when you'd rather
+apply roles to make your custom C<foo_class> instead of manually setting up a
+subclass.
+
+=head1 PARAMETERS
+
+=head2 name
+
+A string naming the related class.  C<driver> in the L</SYNOPSIS>.  Required.
+
+=head2 class_accessor_name
+
+A string naming the related class accessor.  C<driver_class> in the
+L</SYNOPSIS>.  Defaults to appending C<_class> to the C<name>.
+
+=head2 apply_method_name
+
+A string naming the role applying method.  C<apply_driver_class_names> in the
+L</SYNOPSIS>.  Defaults to adding C<apply_> and C<_names> to the
+C<class_accessor_name>.
 
 =cut
