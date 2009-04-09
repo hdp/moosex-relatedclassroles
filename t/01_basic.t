@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 { package Bar; use Moose; }
 
@@ -32,6 +32,16 @@ eval {
 };
 like $@, qr/requires the method 'bar_class'/,
   "class_accessor_name is required";
+
+eval {
+  package Foo2b;
+  use Moose;
+  with 'MooseX::Role::RelatedClassRoles' => {
+    name => 'bar',
+    require_class_accessor => 0,
+  };
+};
+is $@, "", "no error with override";
 
 {
   package Foo3;
