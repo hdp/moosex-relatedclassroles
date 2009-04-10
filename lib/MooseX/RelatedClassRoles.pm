@@ -1,4 +1,4 @@
-package MooseX::Role::RelatedClassRoles;
+package MooseX::RelatedClassRoles;
 # ABSTRACT: Apply roles to a class related to yours
 use MooseX::Role::Parameterized;
 
@@ -60,7 +60,7 @@ __END__
     isa => 'MyApp::Driver',
   );
 
-  with 'MooseX::Role::RelatedClassRoles' => { name => 'driver' };
+  with 'MooseX::RelatedClassRoles' => { name => 'driver' };
 
   # ...
 

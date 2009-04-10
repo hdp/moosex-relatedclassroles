@@ -1,3 +1,7 @@
+0.003 Fri, 10 Apr 2009 19:16:47 -0400
+
+  - Rename the distribution and module
+
 0.002 Thu, 09 Apr 2009 17:18:15 -0400
 
   - Allow secret parameter for turning off 'requires'
