@@ -9,7 +9,7 @@ use Test::More tests => 5;
   use Moose;
   has bar_class => (is => 'rw', isa => 'ClassName', default => 'Bar');
 
-  with 'MooseX::Role::RelatedClassRoles' => { name => 'bar' };
+  with 'MooseX::RelatedClassRoles' => { name => 'bar' };
 }
 
 {
@@ -28,7 +28,7 @@ ok(
 eval {
   package Foo2;
   use Moose;
-  with 'MooseX::Role::RelatedClassRoles' => { name => 'bar' };
+  with 'MooseX::RelatedClassRoles' => { name => 'bar' };
 };
 like $@, qr/requires the method 'bar_class'/,
   "class_accessor_name is required";
@@ -36,7 +36,7 @@ like $@, qr/requires the method 'bar_class'/,
 eval {
   package Foo2b;
   use Moose;
-  with 'MooseX::Role::RelatedClassRoles' => {
+  with 'MooseX::RelatedClassRoles' => {
     name => 'bar',
     require_class_accessor => 0,
   };
@@ -47,7 +47,7 @@ is $@, "", "no error with override";
   package Foo3;
   use Moose;
   has bar_thing => (is => 'rw', default => 'Bar');
-  with 'MooseX::Role::RelatedClassRoles' => {
+  with 'MooseX::RelatedClassRoles' => {
     name => 'bar',
     class_accessor_name => 'bar_thing',
     apply_method_name   => 'make_bar_thing_do',
